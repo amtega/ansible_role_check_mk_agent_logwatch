@@ -19,7 +19,7 @@ galaxy_info:
         - 28
   galaxy_tags:
     - monitoring
-    - check_mk
+    - checkmk
     - logwatch
     - log
 
