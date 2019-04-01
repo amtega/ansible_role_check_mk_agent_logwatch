@@ -1,2 +1,90 @@
 ---
 # Tasks for testing role
+
+- name: Configure docker sandbox environment
+  hosts: localhost
+  roles:
+    - role: amtega.docker_presets
+      docker_presets_images_json_query: >-
+        [? starts_with(name, `centos-6`)
+           || starts_with(name, `centos-7`)
+           || starts_with(name, `fedora-27`)
+           || starts_with(name, `fedora-28`) ]
+  tags:
+    - sandbox
+
+- name: Run idempotence test
+  hosts: localhost
+  roles:
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: started
+  tags:
+    - sandbox
+
+- name: Prepare docker containers for test
+  hosts: docker_sandbox_containers
+  tasks:
+    - name: Setup extra checks
+      set_fact:
+        check_mk_agent_logwatch_extra:
+          - file: /var/log/messages
+            checks:
+              - type: warning
+                regex: "device-mapper: thin:.*reached low water mark"
+              - type: critical
+                regex: "device-mapper: thin:.*no free space"
+              - type: critical
+                regex: "Error: (.*)"
+  tags:
+    - idempotence
+
+- name: Test check_mk_agent_logwatch role
+  hosts: docker_sandbox_containers
+  roles:
+    - amtega.check_mk_agent_logwatch
+  vars:
+    check_mk_agent_logwatch_load_from_hostvars: yes
+    check_mk_agent_logwatch:
+      - file: /var/log/messages
+        checks:
+          - type: critical
+            regex: "Fail event detected on md device"
+          - type: ignore
+            regex: "mdadm.*: Rebuild.*event detected"
+          - type: warning
+            regex: "mdadm\\["
+          - type: warning
+            regex: "ata.*hard resetting link"
+          - type: warning
+            regex: "ata.*soft reset failed (.*FIS failed)"
+  tasks:
+    - name: Read logwatch config file
+      shell: "cat {{ check_mk_agent_logwatch_conf_path }}"
+      changed_when: no
+      register: read_config_result
+
+    - name: Check logwatch config file is ok
+      assert:
+        that:
+          - config is search("\n/var/log/messages")
+          - config is search("\n C Fail.*")
+          - config is search("\n I mdadm.*")
+          - config is search("\n W mdadm.*")
+          - config is search("\n W ata.*hard.*")
+          - config is search("\n W ata.*soft.*")
+          - config is search("\n W device-mapper.*")
+          - config is search("\n C device-mapper.*")
+          - config is search("\n C Error.*")
+      vars:
+        config: "{{ read_config_result.stdout }}"
+  tags:
+    - idempotence
+
+- name: Cleanup docker sandbox
+  hosts: localhost
+  roles:
+    - role: amtega.docker_sandbox
+      docker_sandbox_state: absent
+  tags:
+    - cleanup
+    - sandbox
