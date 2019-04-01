@@ -1,0 +1,12 @@
+{{ ansible_managed | comment }}
+
+{% for file in check_mk_agent_logwatch_to_manage
+               | groupby("file") %}
+{{ file.0 }}
+{% for item in file.1 %}
+{% for check in item.checks %}
+ {{ check.type.0 | upper }} {{ check.regex }}
+{% endfor %}
+{% endfor %}
+{{ " " }}
+{% endfor %}

@@ -1,2 +1,50 @@
 ---
 # Role default lower priority variables
+
+# List of dicts with the logwatch checks to setup. The structure of the
+# dictionaries is the following:
+#
+# {
+#   file: <file_path>    # Log file path
+#   checks:              # List of dicts with the checks for the log file
+#     - type: <type1>    # Type of alert. Can be critical, warning or ignore
+#       regex: <regex1>  # Regular expression for the check
+#     - type: <type2>    # Type of alert. Can be critical, warning or ignore
+#       regex: <regex2>  # Regular expression for the check
+#     - type: <typeN>    # Type of alert. Can be critical, warning or ignore
+#       regex: <regexN>  # Regular expression for the check
+#
+# Sample:
+#
+# check_mk_agent_logwatch:
+#   - file: /var/log/messages
+#     checks:
+#       - type: critical
+#         regex: "Fail event detected on md device"
+#       - type: ignore
+#         regex: "mdadm.*: Rebuild.*event detected"
+#       - type: warning
+#         regex: "mdadm\\["
+#       - type: warning
+#         regex: "ata.*hard resetting link"
+#       - type: warning
+#         regex: "ata.*soft reset failed (.*FIS failed)"
+#       - type: warning
+#         regex: "device-mapper: thin:.*reached low water mark"
+#       - type: critical
+#         regex: "device-mapper: thin:.*no free space"
+#       - type: critical
+#         regex: "Error: (.*)"
+
+check_mk_agent_logwatch: {}
+
+# Path to Check_MK agent logwatch config
+
+check_mk_agent_logwatch_conf_path: /etc/check-mk-agent/logwatch.cfg
+
+# Indicate `check_mk_agent_logwatch` must be loaded also from host variables.
+# Any host variable that begins with "check_mk_agent_logwatch_*" and contains
+# the necessary attributes will be loaded as an item to manage by the role. The
+# variables must follow the structure detailed before for `win_domain_groups`
+
+check_mk_agent_logwatch_load_from_hostvars: no
