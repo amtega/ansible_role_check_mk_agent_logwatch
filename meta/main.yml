@@ -35,7 +35,7 @@ dependencies:
       packages_os:
         all:
           all:
-            check-mk-agent: present
+            check-mk-agent: latest
     tags:
       - role::check_mk_agent_logwatch
       - role::check_mk_agent_logwatch::install
