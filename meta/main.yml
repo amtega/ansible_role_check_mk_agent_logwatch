@@ -47,6 +47,6 @@ dependencies:
         exclude_pattern: "^check_mk_agent_logwatch_load_from_hostvars$"
         fact_name: check_mk_agent_logwatch_hostvars
         output_type: list
-    when: check_mk_agent_logwatch_load_from_hostvars
+    when: check_mk_agent_logwatch_load_from_hostvars | bool
     tags:
       - role::check_mk_agent_logwatch
