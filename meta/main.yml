@@ -7,7 +7,7 @@ galaxy_info:
   description: Setup Check_MK agent logwatch
   company: AMTEGA - Xunta de Galicia
   license: GPLv3 or EUPL
-  min_ansible_version: 2.7
+  min_ansible_version: 2.8
   platforms:
     - name: EL
       versions:
@@ -25,37 +25,17 @@ galaxy_info:
 
 dependencies:
   - role: amtega.check_platform
-    vars:
-      check_platform_distributions:
-        centos: 6
-        fedora: 29
-        redhat: 6
     tags:
-      - role::check_mk_agent_logwatch
+      - never
 
   - role: amtega.epel
-    when: ansible_facts.distribution | lower in ["redhat", "centos"]
     tags:
-      - role::check_mk_agent_logwatch
-      - role::check_mk_agent_logwatch::install
+      - never
 
   - role: amtega.packages
-    vars:
-      packages_os:
-        all:
-          all:
-            check-mk-agent: latest
     tags:
-      - role::check_mk_agent_logwatch
-      - role::check_mk_agent_logwatch::install
+      - never
 
   - role: amtega.select_hostvars
-    vars:
-      select_hostvars_query:
-        pattern: "^check_mk_agent_logwatch_.*"
-        exclude_pattern: "^check_mk_agent_logwatch_load_from_hostvars$"
-        fact_name: check_mk_agent_logwatch_hostvars
-        output_type: list
-    when: check_mk_agent_logwatch_load_from_hostvars | bool
     tags:
-      - role::check_mk_agent_logwatch
+      - never
