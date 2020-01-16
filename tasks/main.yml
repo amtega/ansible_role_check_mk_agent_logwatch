@@ -1,35 +1,6 @@
 ---
 # Role tasks
 
-- include_role:
-    name: amtega.check_platform
-  vars:
-    check_platform_distributions:
-      centos: 6
-      fedora: 29
-      redhat: 6
-
-- include_role:
-    name: amtega.epel
-
-- include_role:
-    name: amtega.packages
-  vars:
-    packages_os:
-      all:
-        all:
-          check-mk-agent: latest
-
-- include_role:
-    name: amtega.select_hostvars
-  vars:
-    select_hostvars_query:
-      pattern: "^check_mk_agent_logwatch_.*"
-      exclude_pattern: "^check_mk_agent_logwatch_load_from_hostvars$"
-      fact_name: check_mk_agent_logwatch_hostvars
-      output_type: list
-  when: check_mk_agent_logwatch_load_from_hostvars | bool
-
 - block:
     - name: Activate Check_MK agent logwatch plugin
       copy:

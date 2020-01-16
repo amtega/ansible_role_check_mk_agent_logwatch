@@ -25,17 +25,26 @@ galaxy_info:
 
 dependencies:
   - role: amtega.check_platform
-    tags:
-      - never
+    vars:
+      check_platform_distributions:
+        centos: 6
+        fedora: 29
+        redhat: 6
 
   - role: amtega.epel
-    tags:
-      - never
 
   - role: amtega.packages
-    tags:
-      - never
+    vars:
+      packages_os:
+        all:
+          all:
+            check-mk-agent: latest
 
   - role: amtega.select_hostvars
-    tags:
-      - never
+    vars:
+      select_hostvars_query:
+        pattern: "^check_mk_agent_logwatch_.*"
+        exclude_pattern: "^check_mk_agent_logwatch_load_from_hostvars$"
+        fact_name: check_mk_agent_logwatch_hostvars
+        output_type: list
+    when: check_mk_agent_logwatch_load_from_hostvars | bool
