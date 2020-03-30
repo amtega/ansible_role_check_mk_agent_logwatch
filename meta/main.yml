@@ -7,7 +7,7 @@ galaxy_info:
   description: Setup Check_MK agent logwatch
   company: AMTEGA - Xunta de Galicia
   license: GPLv3 or EUPL
-  min_ansible_version: 2.8
+  min_ansible_version: 2.9
   platforms:
     - name: EL
       versions:
