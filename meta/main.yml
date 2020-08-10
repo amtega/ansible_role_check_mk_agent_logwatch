@@ -38,7 +38,7 @@ dependencies:
       packages_os:
         all:
           all:
-            check-mk-agent: present
+            python2: present
 
   - role: amtega.select_hostvars
     vars:

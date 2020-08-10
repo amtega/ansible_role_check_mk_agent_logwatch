@@ -1,0 +1,16 @@
+---
+
+- name: Verify
+  hosts: molecule_hosts
+  gather_facts: no
+  tasks:
+    - name: Test logwatch check
+      command: /usr/share/check-mk-agent/plugins/mk_logwatch
+      args:
+        chdir: /etc/check-mk-agent
+      changed_when: no
+      register: check_result
+
+    - name: Assert check output is ok
+      assert:
+        that: check_result.stdout is search("messages:missing")
