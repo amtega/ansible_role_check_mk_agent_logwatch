@@ -42,10 +42,17 @@ This is an example playbook:
 
 Tests are based on [molecule with docker containers](https://molecule.readthedocs.io/en/latest/installation.html).
 
+Test require Check_MK agent to be installed using `amtega.check_mk_agent` role.
+
+To run test you need provide the variables defined in `defaults/main.yml` for both roles. One way to provide this information is calling the testing playbook passing an additional inventory using the following environment variables:
+
+- `ANSIBLE_INVENTORY`: path to an inventory
+- `ANSIBLE_VAULT_PASSWORD_FILE`: path to the file containing the vault password required for the previous inventory
+
 ```shell
 cd amtega.check_mk_agent_logwatch
 
-molecule test --all
+ANSIBLE_INVENTORY=~/myinventory ANSIBLE_VAULT_PASSWORD_FILE=~/myvaultpassword molecule test --all
 ```
 
 ## License

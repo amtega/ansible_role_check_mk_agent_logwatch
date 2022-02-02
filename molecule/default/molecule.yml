@@ -37,7 +37,7 @@ platforms:
     groups:
       - molecule_hosts
       - molecule_hosts_centos
-      - molecule_hosts_centos_8     
+      - molecule_hosts_centos_8
   - name: "fedora34-${INSTANCE_UUID:-1}"
     image: quay.io/fedora/fedora:34
     dockerfile: Dockerfile.systemd.j2
@@ -66,6 +66,9 @@ platforms:
       - molecule_hosts_fedora_35
 provisioner:
   name: ansible
+  ansible_args:
+    - --inventory=${ANSIBLE_INVENTORY}
+    - --vault-password-file=${ANSIBLE_VAULT_PASSWORD_FILE:-/etc/hostname}
   config_options:
     defaults:
       callbacks_enabled: profile_tasks
@@ -74,6 +77,7 @@ provisioner:
     hosts:
       molecule_hosts:
         vars:
+          ansible_user: root
           check_mk_agent_logwatch:
             - file: /var/log/messages
               checks:
@@ -83,6 +87,9 @@ provisioner:
                   regex: "device-mapper: thin:.*no free space"
                 - type: critical
                   regex: "Error: (.*)"
+      molecule_hosts_centos_8:
+        vars:
+          ansible_python_interpreter: /usr/bin/python3
       molecule_hosts_fedora:
         vars:
           ansible_python_interpreter: /usr/bin/python3

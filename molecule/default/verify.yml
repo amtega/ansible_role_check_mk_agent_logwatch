@@ -4,13 +4,33 @@
   hosts: molecule_hosts
   gather_facts: no
   tasks:
+    # Avoid copy & paste including some role stuff
+
+    - name: Gather Check_MK agent info
+      include_tasks: ../../tasks/gather.yml
+
+    - name: Include role vars
+      include_vars: ../../vars/main.yml
+
     - name: Test logwatch check
-      command: /usr/share/check-mk-agent/plugins/mk_logwatch.py
+      command: "{{ check_mk_agent_logwatch_plugins_dir }}/mk_logwatch.py"
       args:
-        chdir: /etc/check-mk-agent
+        chdir: "{{ check_mk_agent_logwatch_config_dir }}"
       changed_when: no
       register: check_result
 
     - name: Assert check output is ok
       assert:
+        quiet: yes
         that: check_result.stdout is search("messages:missing")
+  vars:
+    ansible_python_interpreter: >-
+      {{ (inventory_hostname in groups.molecule_hosts_centos_7)
+         | ternary("/usr/bin/python", "/usr/bin/python3") }}
+
+    config_dir: >-
+      {{ (search_config_dir_result.results
+          | selectattr("stat.exists", "equalto", true)
+          | selectattr("stat.isdir", "equalto", true)
+          | list
+          | last).stat.path }}

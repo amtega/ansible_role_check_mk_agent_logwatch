@@ -45,7 +45,9 @@ dependencies:
     vars:
       select_hostvars_query:
         pattern: "^check_mk_agent_logwatch_.*"
-        exclude_pattern: "^check_mk_agent_logwatch_load_from_hostvars$"
+        exclude_pattern: >-
+          {{ "^check_mk_agent_logwatch_load_from_hostvars|"
+             + "check_mk_agent_logwatch_artifact$" }}
         fact_name: check_mk_agent_logwatch_hostvars
         output_type: list
     when: check_mk_agent_logwatch_load_from_hostvars | bool

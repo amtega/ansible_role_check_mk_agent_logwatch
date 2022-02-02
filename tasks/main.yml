@@ -2,26 +2,7 @@
 # Role tasks
 
 - block:
-    - name: Gather Check_MK agent plugins directory
-      shell: >-
-        set -o pipefail ;
-        /usr/bin/check_mk_agent
-        | head -n 10
-        | grep PluginsDirectory
-        | awk '{ print $NF }'
-      changed_when: no
-      register: check_mk_agent_logwatch_plugins_dir_result
-
-    - name: Search Check_MK agent config directory
-      stat:
-        path: "{{ check_mk_agent_logwatch_config_dir }}"
-      register: check_mk_agent_logwatch_search_config_dir_result
-      loop:
-        - /etc/check_mk
-        - /etc/check-mk-agent
-      loop_control:
-        loop_var: check_mk_agent_logwatch_config_dir
-        label: "{{ check_mk_agent_logwatch_config_dir }}"
+    - include_tasks: gather.yml
 
     - name: Install Check_MK agent logwatch plugin
       include_tasks: artifact.yml
@@ -31,6 +12,7 @@
       template:
         src: logwatch.cfg.j2
         dest: "{{ check_mk_agent_logwatch_config_dir }}/logwatch.cfg"
+        mode: "{{ check_mk_agent_logwatch_config_mode }}"
       vars:
         check_mk_agent_logwatch_to_manage: >-
           {{ check_mk_agent_logwatch

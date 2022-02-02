@@ -9,4 +9,4 @@ check_mk_agent_logwatch_config_dir: >-
       | selectattr("stat.exists", "equalto", true)
       | selectattr("stat.isdir", "equalto", true)
       | list
-      | last }}
+      | last).stat.path }}
