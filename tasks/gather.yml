@@ -1,0 +1,22 @@
+---
+
+- name: Gather Check_MK agent plugins directory
+  shell: >-
+    set -o pipefail ;
+    /usr/bin/check_mk_agent
+    | head -n 10
+    | grep PluginsDirectory
+    | awk '{ print $NF }'
+  changed_when: no
+  register: check_mk_agent_logwatch_plugins_dir_result
+
+- name: Gather Check_MK agent config directory
+  stat:
+    path: "{{ check_mk_agent_logwatch_main_config_dir }}"
+  register: check_mk_agent_logwatch_search_config_dir_result
+  loop:
+    - /etc/check_mk
+    - /etc/check-mk-agent
+  loop_control:
+    loop_var: check_mk_agent_logwatch_main_config_dir
+    label: "{{ check_mk_agent_logwatch_main_config_dir }}"
