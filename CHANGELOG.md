@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.0] - 2022-02-02
 ### Added
-- Added plugin download
+- Added plugin mode variables.
+- Added plugin download.
 
 ### Changed
 - Removed `check_mk_agent_logwatch_conf_path` variable
