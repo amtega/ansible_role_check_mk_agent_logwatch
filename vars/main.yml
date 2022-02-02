@@ -1,9 +1,12 @@
 ---
 # Role variables
 
-# Plugins paths
+check_mk_agent_logwatch_plugins_dir: >-
+  {{ check_mk_agent_logwatch_plugins_dir_result.stdout }}
 
-check_mk_agent_logwatch_available_plugins_dir: >-
-  /usr/share/check-mk-agent/available-plugins
-
-check_mk_agent_logwatch_plugins_dir: /usr/share/check-mk-agent/plugins
+check_mk_agent_logwatch_config_dir: >-
+  {{ (check_mk_agent_logwatch_search_config_dir_result.results
+      | selectattr("stat.exists", "equalto", true)
+      | selectattr("stat.isdir", "equalto", true)
+      | list
+      | last).stat.path }}
