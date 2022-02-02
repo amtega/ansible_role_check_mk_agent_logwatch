@@ -38,6 +38,10 @@
 
 check_mk_agent_logwatch: {}
 
+# Mode for plugin
+
+check_mk_agent_logwatch_mode: "0755"
+
 # Mode for config file
 
 check_mk_agent_logwatch_config_mode: "0755"

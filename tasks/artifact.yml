@@ -6,5 +6,6 @@
   vars:
     artifact_overrides:
       dest: "{{ check_mk_agent_logwatch_plugins_dir }}"
+      mode: "{{ check_mk_agent_logwatch_mode }}"
     artifact: >-
       {{ check_mk_agent_logwatch_artifact | combine(artifact_overrides) }}
