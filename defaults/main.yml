@@ -38,13 +38,30 @@
 
 check_mk_agent_logwatch: {}
 
-# Path to Check_MK agent logwatch config
-
-check_mk_agent_logwatch_conf_path: /etc/check-mk-agent/logwatch.cfg
-
 # Indicate `check_mk_agent_logwatch` must be loaded also from host variables.
 # Any host variable that begins with "check_mk_agent_logwatch_*" and contains
 # the necessary attributes will be loaded as an item to manage by the role. The
 # variables must follow the structure detailed before for `win_domain_groups`
 
 check_mk_agent_logwatch_load_from_hostvars: no
+
+# If not defined the role will not install the plugin and only will configure.
+#
+# To download the plugin you need to configure the
+# `check_mk_agent_logwatch_artifact` variable to point to a local/public
+# repository that contains the required artifact
+#
+# Take a look to `amtega.artifact` role documentation to known about supported
+# types of artifacts, their specific settings and how to configure a proxy if
+# necessary
+#
+# 
+# check_mk_agent_logwatch_artifact:
+#   id: check_mk_agent_logwatch_artifact
+#   type: https
+#   host: "http://mynagios.acme.com"
+#   path: /site01/check_mk/agents
+#   file: mk_logwatch.py
+#   timeout: 120
+#   validate_certs: yes
+#   no_log: yes

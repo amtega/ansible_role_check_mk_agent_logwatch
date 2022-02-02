@@ -1,0 +1,10 @@
+---
+
+- name: Download Check_MK agent logwatch artifact
+  include_role:
+    name: amtega.artifact
+  vars:
+    artifact_overrides:
+      dest: "{{ check_mk_agent_logwatch_plugins_dir }}"
+    artifact: >-
+      {{ check_mk_agent_logwatch_artifact | combine(artifact_overrides) }}

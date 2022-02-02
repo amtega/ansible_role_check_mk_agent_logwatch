@@ -2,17 +2,35 @@
 # Role tasks
 
 - block:
-    - name: Activate Check_MK agent logwatch plugin
-      copy:
-        src: "{{ check_mk_agent_logwatch_available_plugins_dir }}/mk_logwatch"
-        dest: "{{ check_mk_agent_logwatch_plugins_dir }}"
-        remote_src: yes
-        mode: 0755
+    - name: Gather Check_MK agent plugins directory
+      shell: >-
+        set -o pipefail ;
+        /usr/bin/check_mk_agent
+        | head -n 10
+        | grep PluginsDirectory
+        | awk '{ print $NF }'
+      changed_when: no
+      register: check_mk_agent_logwatch_plugins_dir_result
+
+    - name: Search Check_MK agent config directory
+      stat:
+        path: "{{ check_mk_agent_logwatch_config_dir }}"
+      register: check_mk_agent_logwatch_search_config_dir_result
+      loop:
+        - /etc/check_mk
+        - /etc/check-mk-agent
+      loop_control:
+        loop_var: check_mk_agent_logwatch_config_dir
+        label: "{{ check_mk_agent_logwatch_config_dir }}"
+
+    - name: Install Check_MK agent logwatch plugin
+      include_tasks: artifact.yml
+      when: check_mk_agent_logwatch_artifact is defined
 
     - name: Setup Check_MK agent logwatch config file
       template:
         src: logwatch.cfg.j2
-        dest: "{{ check_mk_agent_logwatch_conf_path }}"
+        dest: "{{ check_mk_agent_logwatch_config_dir }}/logwatch.cfg"
       vars:
         check_mk_agent_logwatch_to_manage: >-
           {{ check_mk_agent_logwatch

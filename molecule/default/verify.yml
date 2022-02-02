@@ -5,7 +5,7 @@
   gather_facts: no
   tasks:
     - name: Test logwatch check
-      command: /usr/share/check-mk-agent/plugins/mk_logwatch
+      command: /usr/share/check-mk-agent/plugins/mk_logwatch.py
       args:
         chdir: /etc/check-mk-agent
       changed_when: no
