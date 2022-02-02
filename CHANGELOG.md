@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.7.0] - 2022-02-02
+## [1.2.0] - 2022-02-02
 ### Added
 - Added plugin mode variables.
 - Added plugin download.
